@@ -99,7 +99,7 @@ class LaploadServiceProvider extends ServiceProvider
         if (is_array($styles) && (count($styles) >= 1)) {
 
             return collect($styles)->map(function($item) {
-                return asset("/vendor/larabell/css/{$item}");
+                return asset("/vendor/".LaploadHelper::getPackageName()."/css/{$item}");
             })->flatten()->map(function($styleUrl) {
                 return '<link media="all" type="text/css" rel="stylesheet" href="' . $styleUrl . '">';
             })->implode(PHP_EOL);
@@ -114,7 +114,7 @@ class LaploadServiceProvider extends ServiceProvider
 
         if (is_array($scripts) && (count($scripts) >= 1)) {
             return collect($scripts)->map(function($item) {
-                return asset("/vendor/larabell/js/{$item}");
+                return asset("/vendor/".LaploadHelper::getPackageName()."/js/{$item}");
             })->flatten()->map(function($scriptUrl) {
                 return !empty($scriptUrl) ? '<script src="' . $scriptUrl . '"></script>' : '';
             })->implode(PHP_EOL);
@@ -128,7 +128,6 @@ class LaploadServiceProvider extends ServiceProvider
         $styles = self::$cdnAssets['css'] ?? [];
 
         if (is_array($styles) && (count($styles) >= 1)) {
-
             return collect($styles)->map(function($item) {
                 return $item;
             })->flatten()->map(function($styleUrl) {

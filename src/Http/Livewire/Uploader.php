@@ -14,7 +14,10 @@ class Uploader extends Component
     public $rawImages;
     public $images     = [];
     public $imagesName = [];
-    public $oldImages, $multiple, $name, $size;
+    public $oldImages;
+    public $multiple;
+    public $name;
+    public $size;
     public $disk       = 'public';
 
     protected $messages = [
@@ -26,7 +29,7 @@ class Uploader extends Component
         'rawImages.max'     => 'The image must not be greater than :max KB.',
     ];
 
-    public function mount(string $name, bool $multiple = false, int $size=1024, array $old = null)
+    public function mount(string $name, bool $multiple = false, int $size = 1024, array $old = null)
     {
         $this->name                  = $name;
         $this->size                  = $size;
@@ -45,13 +48,13 @@ class Uploader extends Component
     {
         if ($this->multiple) {
             $this->validate(
-                ['rawImages.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:'.$this->size.'\''],
+                ['rawImages.*' => 'image|mimes:'.LaploadHelper::getImageMimes().'|max:'.(int) $this->size.'\''],
             );
         }
 
         if (!$this->multiple) {
             $this->validate(
-                ['rawImages' => 'image|mimes:jpeg,png,jpg,gif,svg|max:'.$this->size.'\''],
+                ['rawImages' => 'image|mimes:'.LaploadHelper::getImageMimes().'|max:'.(int) $this->size.'\''],
                 []
             );
         }
@@ -68,7 +71,7 @@ class Uploader extends Component
             foreach ($this->imagesName as $image) {
                 Storage::delete(LaploadHelper::getLocalDiskUploadPath() . $image);
             }
-            $this->imagesName = array();
+            $this->imagesName = [];
         }
 
         foreach ($this->images as $image) {
@@ -99,6 +102,6 @@ class Uploader extends Component
 
     public function render()
     {
-        return view(LaploadHelper::getPackageName().'lapload::uploader');
+        return view(LaploadHelper::getPackageName().'::livewire.uploader');
     }
 }
