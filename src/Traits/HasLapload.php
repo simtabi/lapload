@@ -1,11 +1,11 @@
 <?php
 
-namespace Simtabi\Lapload\Http\Traits;
+namespace Simtabi\Lapload\Traits;
 
 use Illuminate\Support\Facades\Storage;
 use Simtabi\Lapload\Helpers\LaploadHelper;
 
-trait ImageUploader
+trait HasLapload
 {
     public function getListeners()
     {

@@ -30,15 +30,16 @@ or
 | size       | int      |   ❌    | Image size limit. (Default: 1024KB)|
 
 Add public properties to store the name of the images uploaded in array and use the ImageUploader trait in the component code (E.g FormComponent.php).
+
 ```PHP
 <?php
 namespace App\Http\Livewire;
 .
 .
-use Simtabi\Lapload\Http\Traits\ImageUploader;
+use Simtabi\Lapload\Traits\HasLapload;
 
 class FormComponent extends Component{
-    use ImageUploader;
+    use HasLapload;
     public $foo;
 }
 ```
