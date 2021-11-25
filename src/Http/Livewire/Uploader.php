@@ -72,7 +72,7 @@ class Uploader extends Component
         }
 
         foreach ($this->images as $image) {
-            $image->store(laploadHelper::getLocalDiskUploadPath(), $this->disk);
+            $image->store(LaploadHelper::getLocalDiskUploadPath(), $this->disk);
             array_push($this->imagesName, $image->hashName());
         }
         return $this->handleImagesUpdated();
