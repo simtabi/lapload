@@ -7,6 +7,8 @@ use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Simtabi\Lapload\Http\Livewire\Uploader;
 use Simtabi\Lapload\Helpers\LaploadHelper;
+use Illuminate\Support\Facades\Route;
+use Illuminate\View\Compilers\BladeCompiler;
 
 class LaploadServiceProvider extends ServiceProvider
 {
@@ -46,6 +48,7 @@ class LaploadServiceProvider extends ServiceProvider
         }
 
         $this->registerDirectives();
+        $this->configureComponents();
 
         Livewire::component(LaploadHelper::getPackageName(), Uploader::class);
     }
@@ -154,4 +157,22 @@ class LaploadServiceProvider extends ServiceProvider
         return false;
     }
 
+
+    protected function configureComponents()
+    {
+        $this->callAfterResolving(BladeCompiler::class, function () {
+            $this->registerComponent('uploader');
+        });
+    }
+
+    /**
+     * Register the given component.
+     *
+     * @param  string  $component
+     * @return void
+     */
+    protected function registerComponent(string $component, $alias = LaploadHelper::PACKAGE_NAME)
+    {
+        Blade::component(LaploadHelper::getPackageName().'::components.'.$component, (!empty($alias) ? "$alias-" : '').$component);
+    }
 }

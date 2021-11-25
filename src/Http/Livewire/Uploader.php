@@ -17,7 +17,8 @@ class Uploader extends Component
     public $oldImages;
     public $multiple;
     public $name;
-    public $size;
+    public $uploadTo   = null;
+    public $maxSize;
     public $disk       = 'public';
 
     protected $messages = [
@@ -29,13 +30,19 @@ class Uploader extends Component
         'rawImages.max'     => 'The image must not be greater than :max KB.',
     ];
 
-    public function mount(string $name, bool $multiple = false, int $size = 1024, array $old = null)
+    public function mount(string $name, string $uploadTo, bool $multiple = false, int $maxSize = LaploadHelper::AVATAR_SIZE, array $old = null)
     {
         $this->name                  = $name;
-        $this->size                  = $size;
+        $this->uploadTo              = $uploadTo;
+        $this->maxSize               = $maxSize ?? LaploadHelper::getDefaultAvatarSize();
         $this->multiple              = $multiple;
         $multiple ? $this->rawImages = []   : $this->rawImages = null;
         $old      ? $this->oldImages = $old : $this->oldImages = null;
+    }
+
+    public function getUploadTo()
+    {
+        return empty($this->uploadTo) ? LaploadHelper::getLocalDiskUploadToPath() : $this->uploadTo;
     }
 
     public function updatingRawImages()
@@ -48,13 +55,13 @@ class Uploader extends Component
     {
         if ($this->multiple) {
             $this->validate(
-                ['rawImages.*' => 'image|mimes:'.LaploadHelper::getImageMimes().'|max:'.(int) $this->size.'\''],
+                ['rawImages.*' => 'image|mimes:'.LaploadHelper::getImageMimes().'|max:'.(int) $this->maxSize.'\''],
             );
         }
 
         if (!$this->multiple) {
             $this->validate(
-                ['rawImages' => 'image|mimes:'.LaploadHelper::getImageMimes().'|max:'.(int) $this->size.'\''],
+                ['rawImages' => 'image|mimes:'.LaploadHelper::getImageMimes().'|max:'.(int) $this->maxSize.'\''],
                 []
             );
         }
@@ -69,13 +76,13 @@ class Uploader extends Component
     {
         if (!empty($this->imagesName)) {
             foreach ($this->imagesName as $image) {
-                Storage::delete(LaploadHelper::getLocalDiskUploadPath() . $image);
+                Storage::delete(LaploadHelper::getLocalDiskUploadToPath() . $image);
             }
             $this->imagesName = [];
         }
 
         foreach ($this->images as $image) {
-            $image->store(LaploadHelper::getLocalDiskUploadPath(), $this->disk);
+            $image->store($this->getUploadTo(), $this->disk);
             array_push($this->imagesName, $image->hashName());
         }
         return $this->handleImagesUpdated();
@@ -88,7 +95,7 @@ class Uploader extends Component
             // $this->oldImages[$index]->delete();
             unset($this->oldImages[$index]);
         } else {
-            Storage::delete(LaploadHelper::getLocalDiskUploadPath() . $this->imagesName[$index]);
+            Storage::delete(LaploadHelper::getLocalDiskUploadToPath() . $this->imagesName[$index]);
             unset($this->images[$index]);
             unset($this->imagesName[$index]);
             return $this->handleImagesUpdated();
