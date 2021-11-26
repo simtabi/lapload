@@ -7,40 +7,50 @@ use Simtabi\Lapload\Helpers\LaploadHelper;
 
 trait HasLapload
 {
-    public $uploadedFiles;
-    
+    public $successfulUploads;
+
     public function getListeners()
     {
-        return ['imagesUpdated', 'deleteImage'];
+        return [
+            'updatedItems',
+            'deleteItem',
+        ];
     }
 
-    public function imagesUpdated($propertyName, $imagesName)
+    public function updatedItems($propertyName, $itemNames)
     {
-        //return array of uploaded images name
-        $this->$propertyName = $imagesName;
-        $this->uploadedFiles = $imagesName;
+        // capture array of uploaded images name
+        $this->$propertyName = $itemNames;
+        $this->setSuccessfulUploads($itemNames);
     }
 
-    public function getUploadedFiles($path)
+    public function deleteItem($oldImage, $directory)
     {
-        $data = null;
+        Storage::delete(LaploadHelper::getLocalDiskUploadPath($directory) . $oldImage);
+    }
 
-        if (!empty($this->uploadedFiles)) {
-            if (count($this->uploadedFiles) == 1) {
-                $data = $path . '/' . $this->uploadedFiles[0];
+    public function setSuccessfulUploads($successfulUploads): self
+    {
+        $this->successfulUploads = $successfulUploads;
+
+        return $this;
+    }
+
+    public function getSuccessfulUploads($path)
+    {
+        $files = null;
+
+        if (!empty($this->successfulUploads)) {
+            if (count($this->successfulUploads) == 1) {
+                $files = $path . '/' . $this->successfulUploads[0];
             }else{
-                foreach ($this->uploadedFiles as $file){
-                    $data[] = $path . '/' . $file;
+                foreach ($this->successfulUploads as $file){
+                    $files[] = $path . '/' . $file;
                 }
             }
         }
 
-        return $data;
+        return $files;
     }
 
-    public function deleteImage($oldImage)
-    {
-        //delete image
-        Storage::delete(LaploadHelper::getLocalDiskUploadPath() . $oldImage);
-    }
 }

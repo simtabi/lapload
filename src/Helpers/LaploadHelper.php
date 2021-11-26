@@ -4,30 +4,34 @@ namespace Simtabi\Lapload\Helpers;
 
 class LaploadHelper
 {
-    public const PACKAGE_NAME = 'lapload';
-    public const IMAGE_MIMES  = 'jpeg,png,jpg,gif,svg';
-    public const AVATAR_SIZE  = 4000; // in kilobyte 4000 = 4mb
+    public const PACKAGE_NAME  = 'lapload';
+    public const IMAGE_MIMES   = 'jpeg,png,jpg,gif,svg';
+    public const FILE_MIMES    = '';
+    public const MAX_FILE_SIZE = 4000; // in kilobytes 4000 = 4mb
 
     public static function getPackageName()
     {
         return self::PACKAGE_NAME;
     }
 
-    public static function getLocalDiskUploadToPath(bool $namespaced = false, $directory = null)
-    {
-        $directory = !empty($directory) ? $directory . '/' : '';
-        $base      = $namespaced ? self::getPackageName() . '/' : '';
-        return $base . $directory;
-    }
-
-    public static function getImageMimes()
+    public static function getImageMimeTypes()
     {
         return self::IMAGE_MIMES;
     }
 
-    public static function getDefaultAvatarSize()
+    public static function getFileMimeTypes()
     {
-        return self::AVATAR_SIZE;
+        return self::FILE_MIMES;
+    }
+
+    public static function getDefaultMaxFileSize()
+    {
+        return self::MAX_FILE_SIZE;
+    }
+
+    public static function getLocalUploadPath($directory = null)
+    {
+        return !empty($directory) ? trim($directory, '/') . '/' : '';
     }
 
 }

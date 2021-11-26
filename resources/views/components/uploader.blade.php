@@ -1,9 +1,14 @@
 @props([
     'name',
     'uploadTo',
+    'uploadType',
     'multiple'  => false,
-    'maxSize'   => LaploadHelper::getDefaultAvatarSize(),
+    'maxSize'   => LaploadHelper::getDefaultMaxFileSize(),
     'old'       => null,
 ])
 
-<livewire:lapload :name="$name" :uploadTo="$uploadTo" :multiple="$multiple" :maxSize="$maxSize" :old="$old" wire:key="{{uniqid() . time() . '_lapload'}}" />
+@if($uploadType == 'image')
+    <livewire:lapload-image :name="$name" :uploadTo="$uploadTo" :multiple="$multiple" :maxSize="$maxSize" :old="$old" />
+@else
+    <livewire:lapload-file :name="$name" :uploadTo="$uploadTo" :multiple="$multiple" :maxSize="$maxSize" :old="$old" />
+@endif

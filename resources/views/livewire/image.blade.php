@@ -1,11 +1,11 @@
 <div class="lapload-container">
     @if (!is_null($oldImages) && !empty($oldImages))
         <h4>Current Images</h4>
-        <div class="image-wrapper mb-4">
+        <div class="file-wrapper mb-4">
             @foreach ($oldImages as $index => $image)
                 <div
-                        class="single-image">
-                    <img src="{{ asset('storage/lapload/'. $image) }}"
+                    class="single-file">
+                    <img src="{{ asset('storage/'.LaploadHelper::getPackageName().'/'. $file) }}"
                          width="" alt="">
                     <button type="button"
                             wire:loading.attr="disabled" wire:target="handleRemoveImage({{ $index }}, true)"
@@ -20,21 +20,18 @@
     @endif
     <h4 class=" mb-4">Selected image(s)</h4>
     @if (empty($images))
-        <div class="lapload-no-image">
+        <div class="empty-uploader">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
             </svg>
             <label>No image selected</label>
         </div>
     @else
-        <div class="image-wrapper">
+        <div class="file-wrapper">
             @foreach ($images as $index => $image)
-                <div
-                        class="single-image mb-4">
-                    <img src="{{ $image->temporaryUrl() }}"
-                         alt="uploaded-image">
-                    <label
-                            class="">{{ $image->getClientOriginalName() }}</label>
+                <div class="single-file mb-4">
+                    <img src="{{ $image->temporaryUrl() }}" alt="{{ $image->getClientOriginalName() }}">
+                    <label class="file-name">{{ $image->getClientOriginalName() }}</label>
                     <button type="button"
                             wire:loading.attr="disabled" wire:target="handleRemoveImage({{ $index }})"
                             wire:click.prevent="handleRemoveImage({{ $index }})">
@@ -47,7 +44,7 @@
         </div>
     @endif
     <div class="input-wrapper">
-        <input id="imagesInput" type="file" accept="image/*" wire:model="rawImages" {{ $multiple ? 'multiple' : null }}>
+        <input id="uploadsInput" type="file" accept="image/*" wire:model="rawImages" {{ $multiple ? 'multiple' : null }}>
         <div class="drop-zone">
             <div class="" wire:loading wire:target="rawImages">
                 Uploading...
