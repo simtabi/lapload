@@ -18,13 +18,13 @@
             @endforeach
         </div>
     @endif
-    <h4 class=" mb-4">Selected file(s)</h4>
+    <h4 class=" mb-4">Selected {{$uploadType}}(s)</h4>
     @if (empty($files))
         <div class="empty-uploader">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
             </svg>
-            <label>No file selected</label>
+            <label>No {{$uploadType}} selected</label>
         </div>
     @else
         <div class="file-wrapper">
@@ -43,22 +43,35 @@
             @endforeach
         </div>
     @endif
-    <div class="input-wrapper">
-        <input id="uploadsInput" type="file" accept="file/*" wire:model="rawFiles" {{ $multiple ? 'multiple' : null }}>
+
+    <div
+        x-data="{ isUploading: false, progress: 0 }"
+        x-on:livewire-upload-start="isUploading = true"
+        x-on:livewire-upload-finish="isUploading = false"
+        x-on:livewire-upload-error="isUploading = false"
+        x-on:livewire-upload-progress="progress = $event.detail.progress"
+        class="input-wrapper"
+    >
+        <input id="uploadsInput" type="file" accept="{{$uploadType}}/*" wire:model="rawFiles" {{ $multiple ? 'multiple' : null }}>
+
         <div class="drop-zone">
-            <div class="" wire:loading wire:target="rawFiles">
+            <div class="clearfix" wire:loading wire:target="rawFiles">
+                <!-- Progress Bar -->
+                <div x-show="isUploading">
+                    <progress max="100" x-bind:value="progress"></progress>
+                </div>
                 Uploading...
             </div>
 
             <p wire:loading.remove wire:target="rawFiles" class="text-gray-400">
                 @if ($multiple)
-                    Drop files anywhere to upload
+                    Drop {{$uploadType}}s anywhere to upload
                     <br />
-                    or <br> Select Files
+                    or <br> Select {{$uploadType}}s
                 @else
-                    Drop file anywhere to upload
+                    Drop the {{$uploadType}} anywhere to upload
                     <br />
-                    or <br> Select File
+                    or <br> Select a {{$uploadType}}
                 @endif
             </p>
         </div>

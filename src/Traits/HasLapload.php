@@ -7,44 +7,44 @@ use Simtabi\Lapload\Helpers\LaploadHelper;
 
 trait HasLapload
 {
-    public $successfulUploads;
+    public $uploadedFiles;
 
     public function getListeners()
     {
         return [
-            'updatedItems',
-            'deleteItem',
+            'uploadedFiles',
+            'deleteFile',
         ];
     }
 
-    public function updatedItems($propertyName, $itemNames)
+    public function uploadedFiles($propertyName, $itemNames)
     {
         // capture array of uploaded images name
         $this->$propertyName = $itemNames;
-        $this->setSuccessfulUploads($itemNames);
+        $this->setUploadedFiles($itemNames);
     }
 
-    public function deleteItem($oldImage, $directory)
+    public function deleteFile($oldImage, $directory)
     {
         Storage::delete(LaploadHelper::getLocalDiskUploadPath($directory) . $oldImage);
     }
 
-    public function setSuccessfulUploads($successfulUploads): self
+    public function setUploadedFiles($uploadedFiles): self
     {
-        $this->successfulUploads = $successfulUploads;
+        $this->uploadedFiles = $uploadedFiles;
 
         return $this;
     }
 
-    public function getSuccessfulUploads($path)
+    public function getUploadedFiles($path)
     {
         $files = null;
 
-        if (!empty($this->successfulUploads)) {
-            if (count($this->successfulUploads) == 1) {
-                $files = $path . '/' . $this->successfulUploads[0];
+        if (!empty($this->uploadedFiles)) {
+            if (count($this->uploadedFiles) == 1) {
+                $files = $path . '/' . $this->uploadedFiles[0];
             }else{
-                foreach ($this->successfulUploads as $file){
+                foreach ($this->uploadedFiles as $file){
                     $files[] = $path . '/' . $file;
                 }
             }

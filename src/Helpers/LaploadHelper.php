@@ -2,6 +2,10 @@
 
 namespace Simtabi\Lapload\Helpers;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Filesystem\FilesystemAdapter;
+
 class LaploadHelper
 {
     public const PACKAGE_NAME  = 'lapload';
@@ -34,4 +38,8 @@ class LaploadHelper
         return !empty($directory) ? trim($directory, '/') . '/' : '';
     }
 
+    public static function getStorage($disk): Filesystem|FilesystemAdapter
+    {
+        return Storage::disk($disk);
+    }
 }

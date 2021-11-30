@@ -5,8 +5,6 @@ namespace Simtabi\Lapload\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
-use Simtabi\Lapload\Http\Livewire\FileUploader;
-use Simtabi\Lapload\Http\Livewire\ImageUploader;
 use Simtabi\Lapload\Http\Livewire\Uploader;
 use Simtabi\Lapload\Helpers\LaploadHelper;
 use Illuminate\Support\Facades\Route;
@@ -52,8 +50,7 @@ class LaploadServiceProvider extends ServiceProvider
         $this->registerDirectives();
         $this->configureComponents();
 
-        Livewire::component(LaploadHelper::getPackageName() . '-image', ImageUploader::class);
-        Livewire::component(LaploadHelper::getPackageName() . '-file', FileUploader::class);
+        Livewire::component(LaploadHelper::getPackageName(), Uploader::class);
     }
 
     /**
