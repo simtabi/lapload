@@ -11,6 +11,7 @@
     'width'        => 760,
     'height'       => null,
     'refreshList'  => null,
+    'current'      => null,
 ])
 
 <livewire:lapload
@@ -26,4 +27,5 @@
     :width="$width"
     :height="$height"
     :refreshList="$refreshList"
+    :current="$current"
 />

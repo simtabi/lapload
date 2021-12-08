@@ -1,4 +1,5 @@
 <div class="lapload-container">
+
     @if (!is_null($oldFiles) && !empty($oldFiles))
         <h4>Current Files</h4>
         <div class="file-wrapper mb-4">
@@ -19,6 +20,17 @@
         </div>
     @endif
     <h4 class=" mb-4">{{$this->getLabel()}}</h4>
+
+
+        @if(!empty($this->current) && is_array($this->current))
+            <p class="text-muted mt-1 fw-bold fs-6 mb-2">Current</p>
+        @foreach($this->current as $current)
+                <div class="symbol symbol-45px me-2">
+                    <img src="{{$current}}" alt="Image">
+                </div>
+            @endforeach
+        @endif
+
     @if (empty($files))
             <div class="empty-uploader">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">

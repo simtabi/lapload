@@ -15,7 +15,7 @@ class Uploader extends Component
     public $rawFiles;
     public $files        = [];
     public $fileNames    = [];
-    public $oldFiles, $multiple, $name, $maxSize, $uploadTo, $uploadType, $label;
+    public $oldFiles, $multiple, $name, $maxSize, $uploadTo, $uploadType, $label, $current;
     public $disk         = 'local';
     public $imageQuality = 65;
     public $width, $height;
@@ -51,7 +51,7 @@ class Uploader extends Component
         };
     }
 
-    public function mount(string $name, string $uploadTo, string $uploadType, string $label, ?array $refreshList = [], bool $multiple = false, int $maxSize = LaploadHelper::MAX_FILE_SIZE, array $old = null, $disk = 'local', $imageQuality = 65, $width = 720, $height = null)
+    public function mount(string $name, string $uploadTo, string $uploadType, string $label, ?string $current = null, ?array $refreshList = [], bool $multiple = false, int $maxSize = LaploadHelper::MAX_FILE_SIZE, array $old = null, $disk = 'local', $imageQuality = 65, $width = 720, $height = null)
     {
         $this->name                 = $name;
         $this->uploadTo             = $uploadTo;
@@ -74,6 +74,8 @@ class Uploader extends Component
         }
 
         $this->setLabel($label);
+
+        $this->setCurrent($current);
     }
 
     public function setWidth($width): self
@@ -111,6 +113,21 @@ class Uploader extends Component
     public function getLabel()
     {
         return $this->label;
+    }
+
+    public function setCurrent($current): self
+    {
+        if (!is_array($current) && is_string($current)) {
+            $current = explode(",", $current);
+        }
+        $this->current = $current;
+        
+        return $this;
+    }
+
+    public function getCurrent()
+    {
+        return $this->current;
     }
 
     public function getTitle()
