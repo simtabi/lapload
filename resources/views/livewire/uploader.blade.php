@@ -18,16 +18,17 @@
             @endforeach
         </div>
     @endif
-    <h4 class=" mb-4">Selected {{$uploadType}}(s)</h4>
+    <h4 class=" mb-4">{{$this->getLabel()}}</h4>
     @if (empty($files))
-        <div class="empty-uploader">
+            <div class="empty-uploader">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
             </svg>
-            <label>No {{$uploadType}} selected</label>
-        </div>
+            <label>No {{$this->getTitle()}} selected</label>
+            </div>
     @else
-        <div class="file-wrapper">
+            <p class="text-muted mt-1 fw-bold fs-6 mb-4"> Selected {{$this->getTitle()}}</p>
+            <div class="file-wrapper">
             @foreach ($files as $index => $file)
                 <div class="single-file mb-4">
                     <img src="{{ $file->temporaryUrl() }}" alt="{{ $file->getClientOriginalName() }}">
@@ -55,7 +56,7 @@
         <input id="uploadsInput" type="file" accept="{{$uploadType}}/*" wire:model="rawFiles" {{ $multiple ? 'multiple' : null }}>
 
         <div class="drop-zone">
-            <div class="clearfix" wire:loading wire:target="rawFiles">
+            <div class="clearfix text-muted mt-1 fw-bold fs-6" wire:loading wire:target="rawFiles">
                 <!-- Progress Bar -->
                 <div x-show="isUploading">
                     <progress max="100" x-bind:value="progress"></progress>
@@ -65,13 +66,13 @@
 
             <p wire:loading.remove wire:target="rawFiles" class="text-gray-400">
                 @if ($multiple)
-                    Drop {{$uploadType}}s anywhere to upload
+                    Drop {{$this->getTitle()}} anywhere to upload
                     <br />
-                    or <br> Select {{$uploadType}}s
+                    or <br> Select {{$this->getTitle()}}
                 @else
-                    Drop the {{$uploadType}} anywhere to upload
+                    Drop the {{$this->getTitle()}} anywhere to upload
                     <br />
-                    or <br> Select a {{$uploadType}}
+                    or <br> Click to select and upload
                 @endif
             </p>
         </div>

@@ -2,6 +2,7 @@
     'name',
     'uploadTo',
     'uploadType',
+    'label',
     'multiple'     => false,
     'maxSize'      => LaploadHelper::getDefaultMaxFileSize(),
     'old'          => null,
@@ -16,6 +17,7 @@
     :name="$name"
     :uploadTo="$uploadTo"
     :uploadType="$uploadType"
+    :label="$label"
     :multiple="$multiple"
     :maxSize="$maxSize"
     :old="$old"

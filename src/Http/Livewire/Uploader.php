@@ -15,7 +15,7 @@ class Uploader extends Component
     public $rawFiles;
     public $files        = [];
     public $fileNames    = [];
-    public $oldFiles, $multiple, $name, $maxSize, $uploadTo, $uploadType;
+    public $oldFiles, $multiple, $name, $maxSize, $uploadTo, $uploadType, $label;
     public $disk         = 'local';
     public $imageQuality = 65;
     public $width, $height;
@@ -51,11 +51,12 @@ class Uploader extends Component
         };
     }
 
-    public function mount(string $name, string $uploadTo, string $uploadType, ?array $refreshList = [], bool $multiple = false, int $maxSize = LaploadHelper::MAX_FILE_SIZE, array $old = null, $disk = 'local', $imageQuality = 65, $width = 720, $height = null)
+    public function mount(string $name, string $uploadTo, string $uploadType, string $label, ?array $refreshList = [], bool $multiple = false, int $maxSize = LaploadHelper::MAX_FILE_SIZE, array $old = null, $disk = 'local', $imageQuality = 65, $width = 720, $height = null)
     {
         $this->name                 = $name;
         $this->uploadTo             = $uploadTo;
         $this->uploadType           = $uploadType;
+        $this->label                = $label;
         $this->maxSize              = $maxSize ?? LaploadHelper::getDefaultMaxFileSize();
         $this->multiple             = $multiple;
         $this->disk                 = $disk;
@@ -71,6 +72,8 @@ class Uploader extends Component
         if ($width) {
             $this->setHeight($height);
         }
+
+        $this->setLabel($label);
     }
 
     public function setWidth($width): self
@@ -94,8 +97,25 @@ class Uploader extends Component
 
     public function updatingRawFiles()
     {
-        $this->multiple ? $this->rawFiles =[ ] : $this->rawFiles = null;
+        $this->multiple ? $this->rawFiles = [] : $this->rawFiles = null;
         $this->files                      = [];
+    }
+
+    public function setLabel($label): self
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    public function getTitle()
+    {
+        return $this->name . ' ' . $this->uploadType . ($this->multiple ? '(s)' : '');
     }
 
     public function updatedRawFiles($value)
