@@ -20,7 +20,7 @@ trait HasLapload
     public function uploadedFiles($propertyName, $itemNames)
     {
         // capture array of uploaded images name
-        $this->$propertyName = $itemNames;
+        $this->{$propertyName} = $itemNames;
         $this->setUploadedFiles($itemNames);
     }
 
@@ -40,11 +40,13 @@ trait HasLapload
     {
         $files = null;
 
-        if (!empty($this->uploadedFiles)) {
+        if (!empty($this->uploadedFiles))
+        {
             if (count($this->uploadedFiles) == 1) {
                 $files = $path . '/' . $this->uploadedFiles[0];
             }else{
-                foreach ($this->uploadedFiles as $file){
+                foreach ($this->uploadedFiles as $file)
+                {
                     $files[] = $path . '/' . $file;
                 }
             }
