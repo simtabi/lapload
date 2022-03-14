@@ -36,6 +36,12 @@ trait HasLapload
         return $this;
     }
 
+    protected function processUploadedImage(string $uploadPath): array|string|null
+    {
+        $file = $this->getUploadedFiles($uploadPath);
+        return !empty($file) ? $file : null;
+    }
+
     public function getUploadedFiles($path)
     {
         $files = null;
