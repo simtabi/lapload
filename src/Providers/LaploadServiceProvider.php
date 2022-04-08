@@ -13,7 +13,8 @@ use Illuminate\View\Compilers\BladeCompiler;
 class LaploadServiceProvider extends ServiceProvider
 {
 
-    private const PACKAGE_PATH = __DIR__ . '/../../';
+    private string $packageName = 'lapload';
+    private const  PACKAGE_PATH = __DIR__ . '/../../';
 
     public static array $cdnAssets = [
         'css'  => [
@@ -32,48 +33,53 @@ class LaploadServiceProvider extends ServiceProvider
     ];
 
     /**
+     * Register the application services.
+     */
+    public function register()
+    {
+        $this->loadTranslationsFrom(self::PACKAGE_PATH . "resources/lang/", $this->packageName);
+        $this->loadMigrationsFrom(self::PACKAGE_PATH.'/../database/migrations');
+        $this->loadViewsFrom(self::PACKAGE_PATH . "resources/views", $this->packageName);
+        $this->mergeConfigFrom(self::PACKAGE_PATH . "config/{$this->packageName}.php", $this->packageName);
+    }
+
+    /**
      * Bootstrap the application services.
      */
     public function boot()
     {
 
-        // merge configurations
-        $this->mergeConfigFrom(self::PACKAGE_PATH .'config/config.php', LaploadHelper::getPackageName());
-
-        // load views
-        $this->loadViewsFrom(self::PACKAGE_PATH . 'resources/views', LaploadHelper::getPackageName());
-
-        if ( $this->app->runningInConsole()) {
-            $this->registerPublishables();
-        }
-
+        $this->registerConsoles();
         $this->registerDirectives();
         $this->configureComponents();
 
         Livewire::component(LaploadHelper::getPackageName(), Uploader::class);
     }
 
-    /**
-     * Register the application services.
-     */
-    public function register()
+    private function registerConsoles(bool $publishPublicAssets = false): static
     {
-        //
-    }
 
-    private function registerPublishables(): void
-    {
-        $this->publishes([
-            self::PACKAGE_PATH . 'config/config.php' => config_path(LaploadHelper::getPackageName().'.php'),
-        ], LaploadHelper::getPackageName().':config');
+        if ($this->app->runningInConsole())
+        {
 
-        $this->publishes([
-            self::PACKAGE_PATH . 'public'            => public_path('vendor/'.LaploadHelper::getPackageName()),
-        ], LaploadHelper::getPackageName().':assets');
+            $this->publishes([
+                self::PACKAGE_PATH . "config/{$this->packageName}.php" => config_path("{$this->packageName}.php"),
+            ], "{$this->packageName}:config");
 
-        $this->publishes([
-            self::PACKAGE_PATH . 'resources/views'   => resource_path('views/vendor/'.LaploadHelper::getPackageName()),
-        ], LaploadHelper::getPackageName().':views');
+            $this->publishes([
+                self::PACKAGE_PATH . "public"                          => public_path("vendor/{$this->packageName}"),
+            ], "{$this->packageName}:assets");
+
+            $this->publishes([
+                self::PACKAGE_PATH . "resources/views"                 => resource_path("views/vendor/{$this->packageName}"),
+            ], "{$this->packageName}:views");
+
+            $this->publishes([
+                self::PACKAGE_PATH . "resources/lang"                  => $this->app->langPath("vendor/{$this->packageName}"),
+            ], "{$this->packageName}:translations");
+        }
+
+        return $this;
     }
 
     private function registerDirectives()
@@ -175,4 +181,5 @@ class LaploadServiceProvider extends ServiceProvider
     {
         Blade::component(LaploadHelper::getPackageName().'::components.'.$component, (!empty($alias) ? "$alias-" : '').$component);
     }
+
 }
