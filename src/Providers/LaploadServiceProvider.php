@@ -38,7 +38,7 @@ class LaploadServiceProvider extends ServiceProvider
     public function register()
     {
         $this->loadTranslationsFrom(self::PACKAGE_PATH . "resources/lang/", $this->packageName);
-        $this->loadMigrationsFrom(self::PACKAGE_PATH.'/../database/migrations');
+        $this->loadMigrationsFrom(self::PACKAGE_PATH.'database/migrations');
         $this->loadViewsFrom(self::PACKAGE_PATH . "resources/views", $this->packageName);
         $this->mergeConfigFrom(self::PACKAGE_PATH . "config/config.php", $this->packageName);
     }
